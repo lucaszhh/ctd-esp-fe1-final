@@ -3,7 +3,8 @@ import BotonFavorito from "../componentes/botones/boton-favorito.componente";
 import TarjetaEpisodio from "../componentes/episodios/tarjeta-episodio.componente";
 
 /**
- * Esta es la pagina de detalle. Aqui se puede mostrar la vista sobre el personaje seleccionado junto con la lista de episodios en los que aparece
+ * Esta es la pagina de detalle. Aqui se puede mostrar la vista sobre el personaje seleccionado 
+ * junto con la lista de episodios en los que aparece
  * 
  * EL TRABAJO SOBRE ESTE ARCHIVO ES OPCIONAL Y NO ES REQUISITO DE APROBACION
  * 
@@ -21,12 +22,11 @@ const PaginaDetalle = () => {
             <div className={"detalle-header"}>
                 <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt="Rick Sanchez"/>
                 <div className={"detalle-header-texto"}>
-
                     <p>Rick Sanchez</p>
                     <p>Planeta: Earth</p>
                     <p>Genero: Male</p>
                 </div>
-                <BotonFavorito esFavorito={false} />
+                <BotonFavorito esFavorito={false} onClick={()=>{}}/>
             </div>
         </div>
         <h4>Lista de episodios donde apareció el personaje</h4>
