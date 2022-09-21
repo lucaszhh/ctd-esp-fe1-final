@@ -15,20 +15,50 @@ const initialState: CharactersState = {
 };
 
 
+/**
+ * @function loadCharacter 
+ * 
+ * @return {Character[]} 
+ */
+
+
+
 export const loadCharacter = createThunk<Character[], void>(
-  "searchCharacter",
+  "loadCharacter",
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    const { pages, name} = state.characters;
+    const { pages, name } = state.characters;
     const results = await getCharacters(
       pages.toString(),
       name
     );
-    
-    return results.results;
+    const parseResults : Character[] = await results.results.map((character: Character) => {
+      const {id, name, episode, image} = character;
+      return { id, name, episode, image, isFavorite: false };
+    })
+    return parseResults;
   }
 );
 
+
+
+/**
+ * @function charactersSlice : acepta el estado inicial, un objeto de funciones de reducción 
+ * y el string name "nombre de segmento", y genera automáticamente creadores de acción y tipos de acción 
+ * de reducers y el estado
+ * 
+ * @param {string} name
+ * @param {CharactersState} initialState
+ * @param {objet} reducers
+ * 
+ * @return {{ 
+ * name : string, 
+ * reducer : ReducerFunction, 
+ * actions : Record<string, ActionCreator>, 
+ * caseReducers: Record<string, CaseReducer>.
+ * getInitialState: () => State
+ * }}
+ */
 
 export const charactersSlice = createSlice({
   name: "characters",
@@ -46,6 +76,27 @@ export const charactersSlice = createSlice({
     },
     searchByName: (state, action) =>{
       state.name = action.payload;
+    },
+    addFavorite: (state, action) =>{
+/*       const characters = state.characters;
+      const newCharacters : Character[] = characters.map((character) => {
+        if(character.id === action.payload){character.isFavorite = true}
+        return character;
+      });
+
+      state.characters = newCharacters; */
+
+
+
+
+      const favotites = action.payload
+      favotites.isFavorite = true;
+      state.favorites = [...state.favorites , favotites]
+    },
+    deleteFavorite: (state, action) => {
+      const favorites = state.favorites
+      const newFavorites = favorites.filter((character: Character)=> character.id !== action.payload )
+      state.favorites = newFavorites;
     }
   },
   extraReducers: (builder) => {
@@ -59,8 +110,10 @@ export const charactersSlice = createSlice({
     });
     builder.addCase(loadCharacter.rejected, (state, action) => {
       state.loading = false;
+      state.characters = [];
       console.log(action.error)
     });
+    builder.addDefaultCase(() => {});
 
   },
 });

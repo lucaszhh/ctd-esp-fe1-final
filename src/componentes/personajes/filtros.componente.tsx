@@ -1,12 +1,15 @@
 import { useAppDispatch } from '../../Hook/Hook';
 import { charactersSlice } from '../../slices/Slice';
-
 import './filtros.css';
 
+/**
+ * Filtro de busqueda de personajes
+ * 
+ * @returns un JSX element 
+ */
 
 
 const Filtros = () => {
-
 
     const dispatch = useAppDispatch();
 

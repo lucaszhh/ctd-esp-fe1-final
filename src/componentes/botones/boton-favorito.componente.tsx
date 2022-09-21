@@ -7,11 +7,17 @@ import './boton-favorito.css';
  * 
  * @returns un JSX element 
  */
-const BotonFavorito = ({esFavorito, onClick}) => {
-    const src = esFavorito ? "/imagenes/star-filled.png" : "/imagenes/star.png"
+
+type Props = {
+    isFavorite: boolean;
+    onClick: any;
+}
+
+const BotonFavorito = ({isFavorite, onClick} : Props) => {
+    const src = isFavorite ? "/imagenes/star-filled.png" : "/imagenes/star.png"
 
     return <div className="boton-favorito">
-        <img src={src} alt={"favorito"} />
+        <img src={src} alt={"favorito"} onClick={onClick}/>
     </div>
 }
 

@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from '../../Hook/Hook';
 import { charactersSlice, loadAllCharacter } from '../../slices/Slice';
 import './paginacion.css';
 import { LIMIT } from "../../constant/constant"
-import { useEffect } from 'react';
 
 /**
  * Componente que contiene los botones para paginar

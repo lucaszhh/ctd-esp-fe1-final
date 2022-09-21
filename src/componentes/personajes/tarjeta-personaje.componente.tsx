@@ -1,17 +1,16 @@
 import BotonFavorito from '../botones/boton-favorito.componente';
 import './tarjeta-personaje.css';
 import {Character} from "../../types/types"
+import { useAppDispatch } from '../../Hook/Hook';
+import { charactersSlice } from '../../slices/Slice';
 
 
 /**
- * Tarjeta para cada personaje dentro de la grilla de personajes. 
+ * Grilla que visualiza cada personaje
  * 
- * Deberás agregar las propiedades necesarias para mostrar los datos de los personajes
- * 
- * 
+ * @param {Character} character
  * @returns un JSX element 
  */
-
 
 type Props = {
     character: Character;
@@ -19,11 +18,19 @@ type Props = {
 
 const TarjetaPersonaje = ({ character }: Props) => {
 
+    const dispatch = useAppDispatch();
+
+    const hadlerOnClick = () => {
+        character.isFavorite 
+        ? dispatch(charactersSlice.actions.deleteFavorite(character.id))
+        : dispatch(charactersSlice.actions.addFavorite(character));
+    }
+
     return <div className="tarjeta-personaje">
         <img src={character.image} alt={character.name}/>
         <div className="tarjeta-personaje-body">
             <span>{character.name}</span>
-            <BotonFavorito esFavorito={false} onClick={()=>{}}/>
+            <BotonFavorito isFavorite={character.isFavorite} onClick={() => hadlerOnClick()}/>
         </div>
     </div>
 }

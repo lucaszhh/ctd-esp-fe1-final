@@ -3,22 +3,17 @@ import GrillaPersonajes from "../componentes/personajes/grilla-personajes.compon
 import Paginacion from "../componentes/paginacion/paginacion.componente";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../Hook/Hook";
-import { loadCharacter } from "../slices/Slice";
+import { charactersSlice, loadCharacter } from "../slices/Slice";
 
-
-
- 
 /**
- * Esta es la pagina principal. Aquí se debera ver el panel de filtros junto con la grilla de personajes.
+ * Esta es la pagina principal. 
  * 
- * Uso: 
- * ``` <PaginaInicio /> ```
- * 
- * @returns la pagina de inicio
+ * @returns elemento JSX con la pagina de inicio
  */
+
 const PaginaInicio = () => {
 
-    const { pages, name } = useAppSelector((state)=> state.characters)
+    const { pages, name, characters } = useAppSelector((state)=> state.characters)
 
     const dispatch = useAppDispatch();
 
@@ -33,7 +28,7 @@ const PaginaInicio = () => {
         </div>
         <Filtros />
         <Paginacion />
-        <GrillaPersonajes/>
+        <GrillaPersonajes characters={characters}/>
         <Paginacion />
     </div>
 }
