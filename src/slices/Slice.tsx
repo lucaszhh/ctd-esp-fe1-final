@@ -44,21 +44,12 @@ export const loadCharacterFavorites = createThunk< Character[], void >(
     const state = thunkAPI.getState();
     const { favorites } = state.characters;
 
-    const getCharactersFavorites: Character[] |  Character  = await getFavorites(favorites); 
+    const getCharactersFavorites: Character[]  = await getFavorites(favorites); 
 
-    const parseResults: Character[] = 
-    Array.isArray(getCharactersFavorites) 
-    ? getCharactersFavorites.map((character: Character) => {
+    const parseResults: Character[] = getCharactersFavorites.map((character: Character) => {
       const {id, name, episode, image} = character;      
-      return { id, name, episode, image, isFavorite: true };
+      return { id, name, episode, image, isFavorite: true }
     })
-    : [{id: getCharactersFavorites.id, 
-      name: getCharactersFavorites.name, 
-      episode: getCharactersFavorites.episode,
-      image: getCharactersFavorites.image,
-      isFavorite: true
-    }, ] 
-    
     return parseResults;
   }
 )

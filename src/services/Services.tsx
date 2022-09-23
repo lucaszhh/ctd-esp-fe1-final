@@ -6,7 +6,8 @@ export const getCharacters = async ( page : string, name: string ) => {
 }
 
 
-export const getFavorites = async ( favorites: number[] ) => {
-    const characterFavorites = await fetch( URL_API + favorites);
-    return characterFavorites.json();
-}
+export const getFavorites = async (favorites: number[]) => {
+    const characterFavorites = await fetch(URL_API + favorites);
+    const data = await characterFavorites.json();
+    return Array.isArray(data) ? data : [data];
+};
