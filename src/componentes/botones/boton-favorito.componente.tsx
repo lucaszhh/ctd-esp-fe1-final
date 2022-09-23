@@ -5,7 +5,7 @@ import './boton-favorito.css';
  * Deberás tipar las propiedades si usas este componente
  * 
  * 
- * @returns un JSX element 
+ * @returns {JSX.Element}
  */
 
 type Props = {

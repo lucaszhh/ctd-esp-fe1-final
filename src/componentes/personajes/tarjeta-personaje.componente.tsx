@@ -2,7 +2,7 @@ import BotonFavorito from '../botones/boton-favorito.componente';
 import './tarjeta-personaje.css';
 import {Character} from "../../types/types"
 import { useAppDispatch } from '../../Hook/Hook';
-import { charactersSlice } from '../../slices/Slice';
+import { charactersSlice, loadCharacter } from '../../slices/Slice';
 
 
 /**
@@ -23,7 +23,8 @@ const TarjetaPersonaje = ({ character }: Props) => {
     const hadlerOnClick = () => {
         character.isFavorite 
         ? dispatch(charactersSlice.actions.deleteFavorite(character.id))
-        : dispatch(charactersSlice.actions.addFavorite(character));
+        : dispatch(charactersSlice.actions.addFavorite(character.id));
+        dispatch(loadCharacter());
     }
 
     return <div className="tarjeta-personaje">

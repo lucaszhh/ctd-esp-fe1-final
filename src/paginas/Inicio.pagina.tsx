@@ -3,12 +3,12 @@ import GrillaPersonajes from "../componentes/personajes/grilla-personajes.compon
 import Paginacion from "../componentes/paginacion/paginacion.componente";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../Hook/Hook";
-import { charactersSlice, loadCharacter } from "../slices/Slice";
+import { loadCharacter } from "../slices/Slice";
 
 /**
  * Esta es la pagina principal. 
  * 
- * @returns elemento JSX con la pagina de inicio
+ * @returns {JSX.Element} 
  */
 
 const PaginaInicio = () => {
@@ -19,7 +19,7 @@ const PaginaInicio = () => {
 
     useEffect(()=>{
         dispatch(loadCharacter());
-    },[ pages,name,dispatch ])
+    },[ pages, name, dispatch ])
 
     return <div className="container">
         <div className="actions">

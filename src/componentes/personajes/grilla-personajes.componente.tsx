@@ -1,6 +1,7 @@
 import './grilla-personajes.css';
 import TarjetaPersonaje from './tarjeta-personaje.componente';
 import { Character } from "../../types/types"
+import { useAppSelector } from '../../Hook/Hook';
 
 
 /**
@@ -17,9 +18,11 @@ type Props = {
 
 const GrillaPersonajes = ({ characters }: Props) => {
 
+    const { error } = useAppSelector((state)=> state.characters);
+
     return <div className="grilla-personajes">
         {
-        characters ?
+        !error ?
         characters.map((character)=>{
             const {id, name, image, episode, isFavorite } = character;
             return <TarjetaPersonaje key={id} character={{id, name, image, episode, isFavorite}}/>

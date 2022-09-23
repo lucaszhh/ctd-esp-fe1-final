@@ -1,5 +1,5 @@
 import { Character, CharactersState } from "../types/types";
-import { getCharacters } from "../services/Services";
+import { getCharacters, getFavorites } from "../services/Services";
 import {  createSlice } from "@reduxjs/toolkit";
 import { LIMIT } from "../constant/constant";
 import { createThunk } from "../Hook/Hook";
@@ -8,38 +8,60 @@ import { createThunk } from "../Hook/Hook";
 const initialState: CharactersState = {
   characters: [],
   favorites: [],
+  charactersFavorites: [],
   pages: 1,
   name: "",
   totalPages: 0,
-  loading: false
+  loading: false,
+  error: false,
 };
 
 
-/**
- * @function loadCharacter 
- * 
- * @return {Character[]} 
- */
 
-
-
-export const loadCharacter = createThunk<Character[], void>(
+export const loadCharacter = createThunk< { characters: Character[],  totalPage: number },  void>(
   "loadCharacter",
   async (_, thunkAPI) => {
-    const state = thunkAPI.getState();
-    const { pages, name } = state.characters;
+    const { characters } = thunkAPI.getState();
+    const { pages, name, favorites } = characters;
     const results = await getCharacters(
       pages.toString(),
-      name
+      name,
     );
+    const totalPages: number = results.info.pages;
     const parseResults : Character[] = await results.results.map((character: Character) => {
-      const {id, name, episode, image} = character;
-      return { id, name, episode, image, isFavorite: false };
+      const {id, name, episode, image} = character;      
+      const isFavorite: boolean = favorites.includes(id);
+      return { id, name, episode, image, isFavorite: isFavorite };
     })
-    return parseResults;
+    return {characters: parseResults, totalPage:totalPages};
   }
 );
 
+
+export const loadCharacterFavorites = createThunk< Character[], void >(
+  "loadCharacterFavorites",
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const { favorites } = state.characters;
+
+    const getCharactersFavorites: Character[] |  Character  = await getFavorites(favorites); 
+
+    const parseResults: Character[] = 
+    Array.isArray(getCharactersFavorites) 
+    ? getCharactersFavorites.map((character: Character) => {
+      const {id, name, episode, image} = character;      
+      return { id, name, episode, image, isFavorite: true };
+    })
+    : [{id: getCharactersFavorites.id, 
+      name: getCharactersFavorites.name, 
+      episode: getCharactersFavorites.episode,
+      image: getCharactersFavorites.image,
+      isFavorite: true
+    }, ] 
+    
+    return parseResults;
+  }
+)
 
 
 /**
@@ -51,7 +73,7 @@ export const loadCharacter = createThunk<Character[], void>(
  * @param {CharactersState} initialState
  * @param {objet} reducers
  * 
- * @return {{ 
+ * @returns {{ 
  * name : string, 
  * reducer : ReducerFunction, 
  * actions : Record<string, ActionCreator>, 
@@ -65,56 +87,53 @@ export const charactersSlice = createSlice({
   initialState,
   reducers: {
     nextPage: (state) => {
-      state.pages === state.totalPages 
-      ? alert("No existe una pag siguiente")
-      : state.pages += LIMIT;
+      state.pages += LIMIT;
     },
     prevPage: (state) => {
-      state.pages === LIMIT 
-      ? alert("No existe una pag anterior")
-      : state.pages -= LIMIT;
+      state.pages -= LIMIT;
     },
-    searchByName: (state, action) =>{
+    searchByName: (state, action: { payload: string }) =>{
       state.name = action.payload;
+      state.pages = LIMIT;
     },
-    addFavorite: (state, action) =>{
-/*       const characters = state.characters;
-      const newCharacters : Character[] = characters.map((character) => {
-        if(character.id === action.payload){character.isFavorite = true}
-        return character;
-      });
-
-      state.characters = newCharacters; */
-
-
-
-
-      const favotites = action.payload
-      favotites.isFavorite = true;
-      state.favorites = [...state.favorites , favotites]
+    addFavorite: (state, action: { payload: number }) => {
+      state.favorites = [...state.favorites , action.payload];
     },
-    deleteFavorite: (state, action) => {
-      const favorites = state.favorites
-      const newFavorites = favorites.filter((character: Character)=> character.id !== action.payload )
-      state.favorites = newFavorites;
-    }
+    deleteFavorite: (state, action: { payload: number }) => {
+      state.favorites = state.favorites.filter((id) => id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
-
     builder.addCase(loadCharacter.pending, (state) => {
       state.loading = true;
+      state.error = false;
     });
     builder.addCase(loadCharacter.fulfilled, (state, action) => {
-      state.characters = action.payload;
+      state.characters = action.payload.characters;
+      state.totalPages = action.payload.totalPage;
       state.loading = false;
+      state.error = false;
     });
-    builder.addCase(loadCharacter.rejected, (state, action) => {
+    builder.addCase(loadCharacter.rejected, (state) => {
       state.loading = false;
       state.characters = [];
-      console.log(action.error)
+      state.totalPages = LIMIT;
+      state.error = true;
+    });
+    builder.addCase(loadCharacterFavorites.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(loadCharacterFavorites.fulfilled, (state, action: { payload: Character[] }) => {
+      state.loading = false;
+      state.error = false;
+      state.charactersFavorites = action.payload;
+    });
+    builder.addCase(loadCharacterFavorites.rejected, (state) => {
+      state.loading = false;
+      state.error = true;
     });
     builder.addDefaultCase(() => {});
-
-  },
+  }
 });
 

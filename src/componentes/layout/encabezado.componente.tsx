@@ -3,12 +3,10 @@ import './encabezado.css';
 
 /**
  * Encabezado que contiene los links para navegar entre las páginas
- *
- * Uso: `<Encabezado />`
- *
- * @returns {JSX.Element}
+
+ * @return {Element}
  */
-const Encabezado = () => {
+const Encabezado: () => JSX.Element = () => {
 
     return <header>
             <div>

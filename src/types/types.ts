@@ -9,10 +9,12 @@ export interface Character {
 
 export interface CharactersState {
     characters: Character[];
-    favorites: Character[];
+    charactersFavorites: Character[];
+    favorites: number[];
     pages: number;
     totalPages: number;
     loading: boolean;
     name: string;
+    error: boolean;
 }
 
