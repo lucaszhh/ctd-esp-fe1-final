@@ -1,16 +1,13 @@
 import { useAppDispatch, useAppSelector } from '../../Hook/Hook';
-import { charactersSlice, loadAllCharacter } from '../../slices/Slice';
+import { charactersSlice } from '../../slices/Slice';
 import './paginacion.css';
 import { LIMIT } from "../../constant/constant"
 
 /**
  * Componente que contiene los botones para paginar
- * 
- * Deberás agregar las propiedades necesarias para que funcione correctamente
- * 
- * 
  * @returns un JSX element 
  */
+
 const Paginacion = () => {
   const { pages , totalPages} = useAppSelector((state) => state.characters);
 
