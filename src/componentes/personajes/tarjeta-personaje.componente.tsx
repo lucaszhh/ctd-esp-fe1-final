@@ -27,6 +27,10 @@ const TarjetaPersonaje = ({ character }: Props) => {
         dispatch(loadCharacter());
     }
 
+    if (!character) {
+        return <h2>NO SE ENCONTRO NINGUN PERSONAJE</h2>
+    }
+
     return <div className="tarjeta-personaje">
         <img src={character.image} alt={character.name}/>
         <div className="tarjeta-personaje-body">

@@ -27,6 +27,8 @@ export const loadCharacter = createThunk< { characters: Character[],  totalPage:
       pages.toString(),
       name,
     );
+    console.log(results);
+    
     const totalPages: number = results.info.pages;
     const parseResults : Character[] = await results.results.map((character: Character) => {
       const {id, name, episode, image} = character;      
